@@ -15,5 +15,17 @@ services:
       - my-db:/var/lib/mysql
     ports:
       - '8765:3306'
+  server:
+    ports:
+      - "8080:8080"
+    build:
+      dockerfile: ./Dockerfile
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - backend
 volumes:
   my-db:
+networks:
+  backend:
