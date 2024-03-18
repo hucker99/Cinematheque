@@ -574,7 +574,7 @@ func main() {
 	// db
 	var err error
 	db, err = sql.Open("mysql",
-		"user:mypassword@tcp(localhost:8765)/testdb?&charset=utf8&interpolateParams=true")
+		"user:mypassword@tcp(db:3306)/testdb?&charset=utf8&interpolateParams=true")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -600,5 +600,5 @@ func main() {
 	handler = Logging(handler)
 
 	fmt.Println("Server up!")
-	log.Fatal(http.ListenAndServe("localhost:8080", handler))
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }
