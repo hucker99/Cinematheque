@@ -172,7 +172,6 @@ func handleUpdateActor(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("actor:%+v\n", actor)
 
 	_, err = db.Exec("UPDATE actors SET name=?, gender=?, birthday=? WHERE actor_id=?",
 		actor.Name, actor.Gender, actor.BirthdayStr, actor.Id)
@@ -200,7 +199,6 @@ func handleCreateFilm(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("film:%+v\n", film)
 
 	// create film
 	result, err := db.Exec("INSERT INTO films (name, release_date, rating) VALUES (?, ?, ?)",
@@ -220,7 +218,6 @@ func handleCreateFilm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, actorID := range film.Actors {
-		fmt.Print("actor:", actorID)
 		_, err = db.Exec("INSERT INTO FilmMembership (actor, film) VALUES (?, ?)",
 			actorID, filmId)
 		if err != nil {
@@ -246,7 +243,6 @@ func handleDeleteFilm(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("id:%+v\n", film.Id)
 
 	// delete Film from Actor table
 	_, err = db.Exec("DELETE FROM films WHERE film_id = ?",
@@ -282,7 +278,6 @@ func handleUpdateFilm(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("film:%+v\n", film)
 
 	_, err = db.Exec("UPDATE films SET name=?, release_date=?, rating=? WHERE film_id=?",
 		film.Name, film.ReleaseDateStr, film.Rating, film.Id)
@@ -363,7 +358,6 @@ func handleGetAllFilms(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGetFilm(w http.ResponseWriter, r *http.Request) {
-	fmt.Print("handleGetFilm!")
 	fragment := r.URL.Query().Get("fragment")
 
 	query := `
@@ -448,7 +442,6 @@ func signIn(w http.ResponseWriter, r *http.Request) {
 	expireDate := time.Now().Add(7 * 24 * time.Hour)
 
 	// Сохранение информации о сессии в базе данных
-	fmt.Printf("userID: %d, cookieValue: %s, expireDate: %+v\n", user.ID, cookieValue, expireDate)
 	_, err = db.Exec("INSERT INTO sessions (uid, cookie, expire_date) VALUES (?, ?, ?)", user.ID, cookieValue, expireDate)
 	if err != nil {
 		log.Println(err)
@@ -536,7 +529,6 @@ func authMiddleware(next http.Handler) http.Handler {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
-		fmt.Printf("session:%+v", session)
 
 		session.ExpireDate, err = time.Parse("2006-01-02 15:04:05", expireDateStr)
 		if err != nil {
